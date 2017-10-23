@@ -15,39 +15,41 @@
         <!--Import Google Icon Font-->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/materialize.min.css">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/minibanco.css">
     </head>
     <body>
-        <header>
-            <nav>
-                <div class="nav-wrapper">
-                    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
-                    <a href="#" class="brand-logo">
-                        <c:out value="${sessionScope.usuario.nombre}"/>
-                    </a>                
-                </div>
-            </nav>
-        </header>
-        <main>
-            <div id="contenedor" class="row">
-                <div id="sideMenu" class="col s3">
-                    <!-- representacion del menu de la aplicacion -->
-                    <ul class="side-nav fixed">
-
-                        <li>
-                            <a href="#!">Prueba 1</a>
-                        </li>
-                        <li>
-                            <a href="#!">Prueba 2</a>
-                        </li>
+        <header class="navbar-fixed">
+            <nav blue-grey darken-2>
+                <div class="nav-wrapper blue-grey darken-4">
+                    <a href="#" class="brand-logo">Logo</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a href="sass.html">Sass</a></li>
+                        <li><a href="badges.html">Components</a></li>
+                        <li><a href="collapsible.html">JavaScript</a></li>
                     </ul>
                 </div>
-                <div id="contenido" class="col s9">
-                    <!-- representacion de los formularios por modulo -->
-                </div>
-            </div>
-        </main>
+                <ul id="slide-out" class="side-nav fixed top-navbar">
+                    <li>
+                        <div class="user-view">
+                            <div class="background">
+                                <img src="img/background.jpg">
+                            </div>
+                            <a href="#!user"><img class="circle" src="img/man_128.png"></a>
+                            <a href="#!name"><span class="white-text name"><c:out value="${sessionScope.usuario.nombre}"/></span></a>
+                            <a href="#!email"><span class="white-text email"><c:out value="${sessionScope.usuario.correo}"/></span></a>
+                        </div>
+                    </li>
+                    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+                    <li><a href="#!">Second Link</a></li>
+                    <li><div class="divider"></div></li>
+                    <li><a class="subheader">Subheader</a></li>
+                    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+                </ul>
+                <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+            </nav>
+        </header>
         <script type="text/javascript" src="js/libs/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="js/libs/materialize.min.js"></script>
+        <script type="text/javascript" src="js/home/home.vista.js"></script>
     </body>
 </html>

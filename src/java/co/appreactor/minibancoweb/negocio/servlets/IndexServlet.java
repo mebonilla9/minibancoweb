@@ -46,20 +46,20 @@ public class IndexServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            Connection cnn = Conexion.conectar();
+
             switch (request.getServletPath()) {
                 case ERutas.Index.INICIAR:
                     request.getRequestDispatcher("index.jsp").forward(request, response);
                     break;
                 case ERutas.Index.AUTENTICAR:
-                    iniciarSesion(request, response, cnn);
+                    iniciarSesion(request, response);
                     break;
                 case ERutas.Index.CERRAR_SESION:
                     break;
                 default:
                     break;
             }
-        } catch (MiniBancoException e){
+        } catch (MiniBancoException e) {
             e.printStackTrace();
         }
     }
@@ -103,22 +103,32 @@ public class IndexServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void iniciarSesion(HttpServletRequest request, HttpServletResponse response, Connection cnn) throws MiniBancoException, ServletException, IOException {
+    private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) throws MiniBancoException, ServletException, IOException {
+        HttpSession sesion = request.getSession(false);
+        if (sesion.getAttribute("usuario") != null) {
+            response.sendRedirect(request.getContextPath() + ERutas.Home.CARGAR);
+            //request.getRequestDispatcher(ERutas.Home.CARGAR).forward(request, response);
+            return;
+        }
         String usuario = request.getParameter("usuario");
         String contrasena = request.getParameter("contrasena");
-        
+
+        if (usuario == null || contrasena == null) {
+            request.setAttribute("error_usuario", "Usuario no encontrado, intente nuevamente!");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+            return;
+        }
+        Connection cnn = Conexion.conectar();
         Cliente clienteAutorizado = new ClienteDelegado(cnn).consultaLogin(usuario, CryptoUtil.cifrarContrasena(contrasena, "384"));
-        
+
         if (clienteAutorizado.getIdCliente() == null) {
             request.setAttribute("error_usuario", "Usuario no encontrado, intente nuevamente!");
             request.getRequestDispatcher("index.jsp").forward(request, response);
             return;
         }
-        
-        HttpSession sesion = request.getSession();
         sesion.setAttribute("usuario", clienteAutorizado);
-        
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + ERutas.Home.CARGAR);
+        //request.getRequestDispatcher(ERutas.Home.CARGAR).forward(request, response);
     }
 
 }
