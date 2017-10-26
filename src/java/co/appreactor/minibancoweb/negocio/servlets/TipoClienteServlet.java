@@ -7,31 +7,33 @@ package co.appreactor.minibancoweb.negocio.servlets;
 
 import co.appreactor.minibancoweb.negocio.constantes.ERutas;
 import co.edu.intecap.minibancolibreria.modelo.conexion.Conexion;
-import co.edu.intecap.minibancolibreria.modelo.vo.Cliente;
-import co.edu.intecap.minibancolibreria.negocio.delegado.ClienteDelegado;
+import co.edu.intecap.minibancolibreria.modelo.dto.RespuestaDto;
+import co.edu.intecap.minibancolibreria.modelo.vo.TipoCliente;
+import co.edu.intecap.minibancolibreria.negocio.constantes.EMensajes;
+import co.edu.intecap.minibancolibreria.negocio.delegado.TipoClienteDelegado;
 import co.edu.intecap.minibancolibreria.negocio.excepciones.MiniBancoException;
-import co.edu.intecap.minibancolibreria.negocio.util.CryptoUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author instructor
  */
-@WebServlet(name = "IndexServlet",
+@WebServlet(name = "TipoClienteServlet",
         urlPatterns = {
-            ERutas.Index.INICIAR,
-            ERutas.Index.AUTENTICAR,
-            ERutas.Index.CERRAR_SESION
+            ERutas.TipoCliente.INSERTAR,
+            ERutas.TipoCliente.MODIFICAR,
+            ERutas.TipoCliente.CONSULTAR,
+            ERutas.TipoCliente.BUSCAR
         })
-public class IndexServlet extends HttpServlet {
+public class TipoClienteServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,24 +46,38 @@ public class IndexServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
 
+        // Determina el tipo de informacion que el servlet puede recibir en el
+        // request a traves de un cliente
+        response.setContentType("application/json");
+
+        RespuestaDto respuesta = null;
+        Connection cnn = null;
+        try (PrintWriter out = response.getWriter()) {
+            // Conexion a la base de datos
+            cnn = Conexion.conectar();
+            // invocacion de un delegado que utiliza la conexion a la base de datos
+
+            TipoClienteDelegado tipoClienteDelegado = new TipoClienteDelegado(cnn);
             switch (request.getServletPath()) {
-                case ERutas.Index.INICIAR:
-                    request.getRequestDispatcher("index.jsp").forward(request, response);
-                    break;
-                case ERutas.Index.AUTENTICAR:
-                    iniciarSesion(request, response);
-                    break;
-                case ERutas.Index.CERRAR_SESION:
-                    break;
-                default:
+                case ERutas.TipoCliente.CONSULTAR:
+                    List<TipoCliente> listaTipoCliente = tipoClienteDelegado.consultar();
+                    if (!listaTipoCliente.isEmpty()) {
+                        respuesta = new RespuestaDto(EMensajes.CONSULTO);
+                        respuesta.setDatos(listaTipoCliente);
+                    } else {
+                        respuesta = new RespuestaDto(EMensajes.NO_RESULTADOS);
+                    }
                     break;
             }
         } catch (MiniBancoException e) {
-            e.printStackTrace();
+            respuesta = new RespuestaDto();
+            respuesta.setCodigo(e.getCodigo());
+            respuesta.setMensaje(e.getMensaje());
+        } finally{
+            Conexion.desconectar(cnn);
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -102,32 +118,5 @@ public class IndexServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) throws MiniBancoException, ServletException, IOException {
-        HttpSession sesion = request.getSession();
-        if (sesion.getAttribute("usuario") != null) {
-            response.sendRedirect(request.getContextPath() + ERutas.Home.CARGAR);
-            return;
-        }
-        String usuario = request.getParameter("usuario");
-        String contrasena = request.getParameter("contrasena");
-
-        if (usuario == null || contrasena == null) {
-            request.setAttribute("error_usuario", "Usuario no encontrado, intente nuevamente!");
-            request.getRequestDispatcher("index.jsp").forward(request, response);
-            return;
-        }
-        Connection cnn = Conexion.conectar();
-        Cliente clienteAutorizado = new ClienteDelegado(cnn).consultaLogin(usuario, CryptoUtil.cifrarContrasena(contrasena, "384"));
-
-        if (clienteAutorizado.getIdCliente() == null) {
-            request.setAttribute("error_usuario", "Usuario no encontrado, intente nuevamente!");
-            request.getRequestDispatcher("index.jsp").forward(request, response);
-            return;
-        }
-        sesion.setAttribute("usuario", clienteAutorizado);
-        response.sendRedirect(request.getContextPath() + ERutas.Home.CARGAR);
-        //request.getRequestDispatcher(ERutas.Home.CARGAR).forward(request, response);
-    }
 
 }

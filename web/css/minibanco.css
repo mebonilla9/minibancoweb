@@ -27,6 +27,10 @@ main, footer {
     margin-top: 64px;
 }
 
+.contenedor-principal{
+    margin: 3%;
+}
+
 @media only screen and (max-width : 992px) {
     main, footer {
         padding-left: 0;

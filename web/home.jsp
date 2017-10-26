@@ -48,6 +48,11 @@
                 <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
             </nav>
         </header>
+        <main>
+            <div class="contenedor-principal">
+                
+            </div>
+        </main>
         <script type="text/javascript" src="js/libs/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="js/libs/materialize.min.js"></script>
         <script type="text/javascript" src="js/home/home.vista.js"></script>
