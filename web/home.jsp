@@ -21,11 +21,12 @@
         <header class="navbar-fixed">
             <nav blue-grey darken-2>
                 <div class="nav-wrapper blue-grey darken-4">
-                    <a href="#" class="brand-logo">Logo</a>
+                    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+                    <a href="#" class="brand-logo">Mini Banco</a>
                     <ul id="nav-mobile" class="right hide-on-med-and-down">
-                        <li><a href="sass.html">Sass</a></li>
-                        <li><a href="badges.html">Components</a></li>
-                        <li><a href="collapsible.html">JavaScript</a></li>
+                        <li><a href="#!">Sass</a></li>
+                        <li><a href="#!">Components</a></li>
+                        <li><a href=".contenedor-principal">JavaScript</a></li>
                     </ul>
                 </div>
                 <ul id="slide-out" class="side-nav fixed top-navbar">
@@ -45,16 +46,17 @@
                     <li><a class="subheader">Subheader</a></li>
                     <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
                 </ul>
-                <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
             </nav>
         </header>
         <main>
             <div class="contenedor-principal">
-                
+                 <!--Aqui van los archivos jsp de cada una de las tablas del dashboard--> 
             </div>
         </main>
         <script type="text/javascript" src="js/libs/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="js/libs/materialize.min.js"></script>
+        <script type="text/javascript" src="js/app/app.dom.js"></script>
+        <script type="text/javascript" src="js/app/app.ajax.js"></script>
         <script type="text/javascript" src="js/home/home.vista.js"></script>
     </body>
 </html>

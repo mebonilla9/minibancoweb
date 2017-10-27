@@ -8,9 +8,9 @@ package co.appreactor.minibancoweb.negocio.servlets;
 import co.appreactor.minibancoweb.negocio.constantes.ERutas;
 import co.edu.intecap.minibancolibreria.modelo.conexion.Conexion;
 import co.edu.intecap.minibancolibreria.modelo.dto.RespuestaDto;
-import co.edu.intecap.minibancolibreria.modelo.vo.TipoCliente;
+import co.edu.intecap.minibancolibreria.modelo.vo.TipoDocumento;
 import co.edu.intecap.minibancolibreria.negocio.constantes.EMensajes;
-import co.edu.intecap.minibancolibreria.negocio.delegado.TipoClienteDelegado;
+import co.edu.intecap.minibancolibreria.negocio.delegado.TipoDocumentoDelegado;
 import co.edu.intecap.minibancolibreria.negocio.excepciones.MiniBancoException;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -27,14 +27,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author instructor
  */
-@WebServlet(name = "TipoClienteServlet",
+@WebServlet(name = "TipoDocumentoServlet",
         urlPatterns = {
-            ERutas.TipoCliente.INSERTAR,
-            ERutas.TipoCliente.MODIFICAR,
-            ERutas.TipoCliente.CONSULTAR,
-            ERutas.TipoCliente.BUSCAR
+            ERutas.TipoDocumento.INSERTAR,
+            ERutas.TipoDocumento.MODIFICAR,
+            ERutas.TipoDocumento.CONSULTAR,
+            ERutas.TipoDocumento.BUSCAR
         })
-public class TipoClienteServlet extends HttpServlet {
+public class TipoDocumentoServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,9 +47,6 @@ public class TipoClienteServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // Determina el tipo de informacion que el servlet puede recibir en el
-        // request a traves de un cliente
         response.setContentType("application/json");
         RespuestaDto respuesta = null;
         Connection cnn = null;
@@ -58,20 +55,19 @@ public class TipoClienteServlet extends HttpServlet {
                 if (request.getSession().getAttribute("usuario") == null) {
                     throw new MiniBancoException(EMensajes.ERROR_SESION);
                 }
-                // Conexion a la base de datos
                 cnn = Conexion.conectar();
-                // invocacion de un delegado que utiliza la conexion a la base de datos
-                TipoClienteDelegado tipoClienteDelegado = new TipoClienteDelegado(cnn);
+                TipoDocumentoDelegado tipoDocumentoDelegado = new TipoDocumentoDelegado(cnn);
                 switch (request.getServletPath()) {
-                    case ERutas.TipoCliente.CONSULTAR:
-                        List<TipoCliente> listaTipoCliente = tipoClienteDelegado.consultar();
-                        if (!listaTipoCliente.isEmpty()) {
+                    case ERutas.TipoDocumento.CONSULTAR:
+                        List<TipoDocumento> listaTipoDocumentos = tipoDocumentoDelegado.consultar();
+                        if (!listaTipoDocumentos.isEmpty()) {
                             respuesta = new RespuestaDto(EMensajes.CONSULTO);
-                            respuesta.setDatos(listaTipoCliente);
+                            respuesta.setDatos(listaTipoDocumentos);
                         } else {
                             respuesta = new RespuestaDto(EMensajes.NO_RESULTADOS);
                         }
                         break;
+
                 }
             } catch (MiniBancoException e) {
                 respuesta = new RespuestaDto();
@@ -82,10 +78,9 @@ public class TipoClienteServlet extends HttpServlet {
             }
             out.print(new Gson().toJson(respuesta));
         }
-
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
