@@ -42,6 +42,15 @@ public final class ERutas {
         public static final String BUSCAR = "/tipodocumento/buscar";
         
     }
+    
+    public static final class Cliente {
+        
+        public static final String INSERTAR = "/cliente/insertar";
+        public static final String MODIFICAR = "/cliente/modificar";
+        public static final String CONSULTAR = "/cliente/consultar";
+        public static final String BUSCAR = "/cliente/buscar";
+        
+    }
 
     
 }

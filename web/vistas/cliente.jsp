@@ -55,12 +55,12 @@
                 </div>
                 <div class="input-field col m6 s12">
                     <select id="cboTipoCliente">
-                        <option value="-1" disabled>Seleccione un tipo de cliente...</option>
+                        <option value="-1">Seleccione un tipo de cliente...</option>
                     </select>
                 </div>
                 <div class="input-field col m6 s12">
                     <select id="cboTipoDocumento">
-                        <option value="-1" disabled>Seleccione un tipo de documento...</option>
+                        <option value="-1">Seleccione un tipo de documento...</option>
                     </select>
                 </div>
                 <div class="switch col m6 s12">
@@ -97,6 +97,7 @@
                         <th>Tipo Cliente</th>
                         <th>Tipo Documento</th>
                         <th>Estado</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

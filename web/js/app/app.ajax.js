@@ -13,8 +13,10 @@ var _app = {
             'success':function(data){
                 // reemplazar por linea que llama al cargador
                 if (data.codigo !== 1) {
+                    _dom.mostrarPanelError(data.mensaje);
                     // reemplazar por linea que llama a un dialogo para 
                     // informar del error
+                    return;
                 }
                 if (args.async !== undefined && args.async === false) {
                     result = data;
