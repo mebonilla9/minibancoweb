@@ -48,6 +48,7 @@ var clienteVista = {
     },
     callbackCargarClientes: function (data) {
         var tbody = $('#tblCliente tbody');
+        tbody.empty();
         for (var i = 0; i < data.datos.length; i++) {
             var fila = $('<tr>');
             fila.append($('<td>').text(data.datos[i].idCliente));
@@ -75,6 +76,10 @@ var clienteVista = {
             );
             fila.append(celdaBotones);
             tbody.append(fila);
+            // Asignacion de evento click para boton .deleteable
+            $('#tblCliente tbody')
+                    .find('.deleteable')
+                    .on('click',thatCliente.eliminarCliente);
         }
     },
     registrarCliente:function(e){
@@ -87,7 +92,7 @@ var clienteVista = {
             telefono:$('#txtTelefono').val(),
             direccion:$('#txtDireccion').val(),
             usuario:$('#txtUsuario').val(),
-            contrasena:CryptoJS.SHA256($('#txtContrasena').val()),
+            contrasena:CryptoJS.SHA256($('#txtContrasena').val()).toString(),
             fechaNacimiento:$('#txtFechaNacimiento').val(),
             correo:$('#txtCorreo').val(),
             tipoCliente:{
@@ -97,8 +102,26 @@ var clienteVista = {
                 idTipoDocumento:_dom.obtenerValorSelect('#cboTipoDocumento')
             },
             estado:$('#cbxEstado').prop('checked')
-        }
+        };
         console.log(data);
+        clienteControl.registrarCliente(JSON.stringify(data),thatCliente.callbackRegistrarCliente);
+    },
+    callbackRegistrarCliente:function(data){
+        _dom.mostrarDialogo(data.mensaje);
+        thatCliente.cargarClientes();
+        $('#formCliente').trigger('reset');
+        $('#cboTipoCliente').prop('selectedIndex',0);
+        $('#cboTipoDocumento').prop('selectedIndex',0);
+    },
+    eliminarCliente:function(){
+        var id = $(this).attr('data-id');
+        clienteModelo.status = "del";
+        thatCliente.buscarCliente(id);
+    },
+    buscarCliente:function(id){
+        clienteControl.buscarCliente({id:id},thatCliente.callbackBuscarCliente);
+ 
     }
+    
 };
 clienteVista.init();

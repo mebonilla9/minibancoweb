@@ -80,9 +80,9 @@
             </form>
         </div>
     </div>
-    <div class="card-panel grey lighten-5">
+    <div class="">
         <div id="clienteTable" class="row">
-            <table id="tblCliente" class="striped highlight">
+            <table id="tblCliente" class="card-panel grey lighten-5 striped highlight responsive-table">
                 <thead>
                     <tr>
                         <th>Id</th>

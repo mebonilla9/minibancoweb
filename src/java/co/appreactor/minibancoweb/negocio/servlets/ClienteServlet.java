@@ -13,8 +13,11 @@ import co.edu.intecap.minibancolibreria.negocio.constantes.EMensajes;
 import co.edu.intecap.minibancolibreria.negocio.delegado.ClienteDelegado;
 import co.edu.intecap.minibancolibreria.negocio.excepciones.MiniBancoException;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -63,13 +66,35 @@ public class ClienteServlet extends HttpServlet {
                 ClienteDelegado clienteDelegado = new ClienteDelegado(cnn);
                 switch (request.getServletPath()) {
                     case ERutas.Cliente.INSERTAR:
-                        
+                        // invocar el metodo que por reflexion convierte a los
+                        // datos de la peticion en un objeto de la clase cliente
+                        Cliente clienteGuardar = obtenerCliente(request);
+                        clienteDelegado.insertar(clienteGuardar);
+                        respuesta = new RespuestaDto(EMensajes.INSERTO);
+                        Conexion.commit(cnn);
+                        break;
+                    case ERutas.Cliente.MODIFICAR:
+                        Cliente clienteModificar = obtenerCliente(request);
+                        clienteDelegado.editar(clienteModificar);
+                        respuesta = new RespuestaDto(EMensajes.MODIFICO);
+                        Conexion.commit(cnn);
                         break;
                     case ERutas.Cliente.CONSULTAR:
-                        List<Cliente> listaCliente = clienteDelegado.consultar();
+                        List<Cliente> listaCliente = clienteDelegado.consultar(true);
                         if (!listaCliente.isEmpty()) {
                             respuesta = new RespuestaDto(EMensajes.CONSULTO);
                             respuesta.setDatos(listaCliente);
+                        } else {
+                            respuesta = new RespuestaDto(EMensajes.NO_RESULTADOS);
+                        }
+                        break;
+                    case ERutas.Cliente.BUSCAR:
+                        Cliente clienteConsultado = clienteDelegado.consultar(
+                                Long.parseLong(request.getParameter("id"))
+                        );
+                        if (clienteConsultado.getIdCliente() != null) {
+                            respuesta = new RespuestaDto(EMensajes.CONSULTO);
+                            respuesta.setDatos(clienteConsultado);
                         } else {
                             respuesta = new RespuestaDto(EMensajes.NO_RESULTADOS);
                         }
@@ -124,5 +149,28 @@ public class ClienteServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private Cliente obtenerCliente(HttpServletRequest request) throws MiniBancoException {
+        Cliente clienteConvertido = new Cliente();
+        try {
+            String json = "";
+            json = request.getReader().readLine();
+            // permitira obtener el tipo de dato a convertir, en tiempo de ejecucion
+            Type tipoDato = new TypeToken<Cliente>() {
+            }.getType();
+            // convertir el json a objeto de la clase cliente
+            clienteConvertido = new Gson().fromJson(json, tipoDato);
+        } catch (JsonSyntaxException | IOException e) {
+            e.printStackTrace();
+            EMensajes mensaje = null;
+            if (e instanceof JsonSyntaxException) {
+                mensaje = EMensajes.ERROR_FORMATO_DATOS;
+            } else if (e instanceof IOException) {
+                mensaje = EMensajes.ERROR_RECEPCION_DATOS;
+            }
+            throw new MiniBancoException(mensaje);
+        }
+        return clienteConvertido;
+    }
 
 }

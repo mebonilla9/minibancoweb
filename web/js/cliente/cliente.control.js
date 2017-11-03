@@ -23,5 +23,12 @@ var clienteControl = {
             'data': data,
             'completado': callback
         });
+    },
+    buscarCliente:function(data,callback){
+        return _app.ajax({
+            'url': 'http://localhost:8084/minibancoweb/cliente/buscar',
+            'data': data,
+            'completado': callback
+        });
     }
 };
