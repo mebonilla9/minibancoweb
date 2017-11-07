@@ -66,25 +66,55 @@
             </div>
             <div class="card-panel grey lighten-4">
                 <div class="row">
-                    <div class="input-field col m6 s12">
+                    <div class="input-field col s10">
                         <select id="cboTipoCliente">
                             <option value="-1">Seleccione un tipo de cliente...</option>
                         </select>
                     </div>
-                    <div class="input-field col m6 s12">
-                        <button type="button" id="btnRegistrarTipoCliente" style="float: right;" class="btn orange lighten-1 waves-effect waves-light"><i class="material-icons">add</i></button>
+                    <div class="input-field col s2">
+                        <button type="button" data-target="tipoClienteModal" id="btnRegistrarTipoCliente" style="float: right;" class="btn modal-trigger orange lighten-1 waves-effect waves-light"><i class="material-icons">add</i></button>
+                    </div>
+                </div>
+                <div id="tipoClienteModal" class="modal modal-for-fixed">
+                    <div class="modal-content">
+                        <h4>Agregar nuevo Tipo de cliente</h4>
+                        <p>Utiliza esta opción para agregar una nuevo tipo de cliente</p>
+                        <div class="row">
+                            <div class="input-field col s12 m12">
+                                <label for="txtNuevoTipoCliente">Tipo Cliente</label>
+                                <input type="text" id="txtNuevoTipoCliente">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn green modal-action modal-close waves-effect waves-light">Agregar</button>
                     </div>
                 </div>
             </div>
             <div class="card-panel grey lighten-4">
                 <div class="row">
-                    <div class="input-field col m6 s12">
+                    <div class="input-field col s10">
                         <select id="cboTipoDocumento">
                             <option value="-1">Seleccione un tipo de documento...</option>
                         </select>
                     </div>
-                    <div class="input-field col m6 s12">
-                        <button type="button" id="btnRegistrarTipoDocumento" style="float: right;" class="btn green lighten-1 waves-effect waves-light"><i class="material-icons">add</i></button>
+                    <div class="input-field col s2">
+                        <button type="button" data-target="tipoDocumentoModal" id="btnRegistrarTipoDocumento" style="float: right;" class="btn modal-trigger green lighten-1 waves-effect waves-light"><i class="material-icons">add</i></button>
+                    </div>
+                </div>
+                <div id="tipoDocumentoModal" class="modal modal-for-fixed">
+                    <div class="modal-content">
+                        <h4>Agregar nuevo Tipo de documento</h4>
+                        <p>Utiliza esta opción para agregar una nuevo tipo de documento</p>
+                        <div class="row">
+                            <div class="input-field col s12 m12">
+                                <label for="txtNuevoTipoCliente">Tipo Documento</label>
+                                <input type="text" id="txtNuevoTipoDocumento">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn green modal-action modal-close waves-effect waves-light">Agregar</button>
                     </div>
                 </div>
             </div>
@@ -104,6 +134,6 @@
         </form>
     </div>
 </div>
-<script type="text/javascript" src="js/cliente/cliente.control.js"></script>
-<script type="text/javascript" src="js/cliente/cliente.vista.js"></script>
+<script type="text/javascript" src="js/registrar/registrar.control.js"></script>
+<script type="text/javascript" src="js/registrar/registrar.vista.js"></script>
 </div>
