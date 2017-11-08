@@ -104,6 +104,7 @@
             </table>
         </div>
     </div>
+    <script type="text/javascript" src="js/cliente/cliente.modelo.js"></script>
     <script type="text/javascript" src="js/cliente/cliente.control.js"></script>
     <script type="text/javascript" src="js/cliente/cliente.vista.js"></script>
 </div>

@@ -13,6 +13,7 @@ import co.edu.intecap.minibancolibreria.negocio.constantes.EMensajes;
 import co.edu.intecap.minibancolibreria.negocio.delegado.ClienteDelegado;
 import co.edu.intecap.minibancolibreria.negocio.excepciones.MiniBancoException;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -107,7 +108,7 @@ public class ClienteServlet extends HttpServlet {
             } finally {
                 Conexion.desconectar(cnn);
             }
-            out.print(new Gson().toJson(respuesta));
+            out.print(new GsonBuilder().setDateFormat("MMM d, yyyy HH:mm:ss a").create().toJson(respuesta));
         }
     }
 
@@ -155,11 +156,14 @@ public class ClienteServlet extends HttpServlet {
         try {
             String json = "";
             json = request.getReader().readLine();
+            if (json == null) {
+                json = request.getParameter("data");
+            }
             // permitira obtener el tipo de dato a convertir, en tiempo de ejecucion
             Type tipoDato = new TypeToken<Cliente>() {
             }.getType();
             // convertir el json a objeto de la clase cliente
-            clienteConvertido = new Gson().fromJson(json, tipoDato);
+            clienteConvertido = new GsonBuilder().setDateFormat("MMM d, yyyy HH:mm:ss a").create().fromJson(json, tipoDato); //new Gson().fromJson(json, tipoDato);
         } catch (JsonSyntaxException | IOException e) {
             e.printStackTrace();
             EMensajes mensaje = null;

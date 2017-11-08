@@ -9,9 +9,9 @@ var clienteVista = {
         thatCliente.cargarClientes();
         thatCliente.asignarEventos();
     },
-    asignarEventos:function(){
+    asignarEventos: function () {
         // Asignacion del evento submit para fomulario de cliente
-        $('#formCliente').on('submit',thatCliente.registrarCliente);
+        $('#formCliente').on('submit', thatCliente.registrarCliente);
     },
     // encargarse de disparar la peticion
     cargarTipoCliente: function () {
@@ -68,60 +68,100 @@ var clienteVista = {
                     $('<a>').addClass("btn red waves-effect waves-light deleteable")
                     .attr('data-id', data.datos[i].idCliente)
                     .html('<i class="material-icons">delete</i>')
-            );
+                    );
             celdaBotones.append(
                     $('<a>').addClass("btn green waves-effect waves-light updateable")
                     .attr('data-id', data.datos[i].idCliente)
                     .html('<i class="material-icons">update</i>')
-            );
+                    );
             fila.append(celdaBotones);
             tbody.append(fila);
             // Asignacion de evento click para boton .deleteable
             $('#tblCliente tbody')
                     .find('.deleteable')
-                    .on('click',thatCliente.eliminarCliente);
+                    .on('click', thatCliente.eliminarCliente);
+            // Asignacion de evento click para boton .updateable
+            $('#tblCliente tbody')
+                    .find('.updateable')
+                    .on('click', thatCliente.modificarCliente);
         }
     },
-    registrarCliente:function(e){
+    registrarCliente: function (e) {
         // Anular el comportamiento por defecto de un formulario
         e.preventDefault();
-        var data = {
-            nombre:$('#txtNombre').val(),
-            apellido:$('#txtApellido').val(),
-            identificacion:$('#txtIdentificacion').val(),
-            telefono:$('#txtTelefono').val(),
-            direccion:$('#txtDireccion').val(),
-            usuario:$('#txtUsuario').val(),
-            contrasena:CryptoJS.SHA256($('#txtContrasena').val()).toString(),
-            fechaNacimiento:$('#txtFechaNacimiento').val(),
-            correo:$('#txtCorreo').val(),
-            tipoCliente:{
-                idTipoCliente:_dom.obtenerValorSelect('#cboTipoCliente')
-            },
-            tipoDocumento:{
-                idTipoDocumento:_dom.obtenerValorSelect('#cboTipoDocumento')
-            },
-            estado:$('#cbxEstado').prop('checked')
-        };
-        console.log(data);
-        clienteControl.registrarCliente(JSON.stringify(data),thatCliente.callbackRegistrarCliente);
+        clienteModelo.clienteActual.nombre = $('#txtNombre').val();
+        clienteModelo.clienteActual.apellido = $('#txtApellido').val();
+        clienteModelo.clienteActual.identificacion = $('#txtIdentificacion').val();
+        clienteModelo.clienteActual.telefono = $('#txtTelefono').val();
+        clienteModelo.clienteActual.direccion = $('#txtDireccion').val();
+        clienteModelo.clienteActual.usuario = $('#txtUsuario').val();
+        clienteModelo.clienteActual.contrasena = CryptoJS.SHA256($('#txtContrasena').val()).toString();
+        clienteModelo.clienteActual.fechaNacimiento = $('#txtFechaNacimiento').val();
+        clienteModelo.clienteActual.correo = $('#txtCorreo').val();
+        clienteModelo.clienteActual.tipoCliente.idTipoCliente = _dom.obtenerValorSelect('#cboTipoCliente');
+        clienteModelo.clienteActual.tipoDocumento.idTipoDocumento = _dom.obtenerValorSelect('#cboTipoDocumento');
+        clienteModelo.clienteActual.estado = $('#cbxEstado').prop('checked');
+        console.log(clienteModelo.clienteActual);
+        clienteControl.registrarCliente(JSON.stringify(clienteModelo.clienteActual), thatCliente.callbackRegistrarCliente);
     },
-    callbackRegistrarCliente:function(data){
+    callbackRegistrarCliente: function (data) {
         _dom.mostrarDialogo(data.mensaje);
         thatCliente.cargarClientes();
         $('#formCliente').trigger('reset');
-        $('#cboTipoCliente').prop('selectedIndex',0);
-        $('#cboTipoDocumento').prop('selectedIndex',0);
+        $('#cboTipoCliente').prop('selectedIndex', 0);
+        $('#cboTipoDocumento').prop('selectedIndex', 0);
     },
-    eliminarCliente:function(){
+    eliminarCliente: function () {
         var id = $(this).attr('data-id');
-        clienteModelo.status = "del";
+        clienteModelo.status = 'del';
         thatCliente.buscarCliente(id);
     },
-    buscarCliente:function(id){
-        clienteControl.buscarCliente({id:id},thatCliente.callbackBuscarCliente);
- 
+    modificarCliente: function () {
+        var id = $(this).attr('data-id');
+        clienteModelo.status = 'upd';
+        thatCliente.buscarCliente(id);
+    },
+    buscarCliente: function (id) {
+        clienteControl.buscarCliente({id: id}, thatCliente.callbackBuscarCliente);
+    },
+    callbackBuscarCliente: function (data) {
+        console.log(data.datos);
+        switch (clienteModelo.status) {
+            case 'del':
+                thatCliente.continuarBorrado(data.datos);
+                break;
+            case 'upd':
+                thatCliente.continuarModificado(data.datos);
+        }
+    },
+    continuarBorrado: function (data) {
+        data.estado = false;
+        console.log(data);
+        clienteControl.modificarCliente(JSON.stringify(data), thatCliente.callbackEliminarCliente);
+    },
+    continuarModificado: function (data) {
+        clienteModelo.clienteActual = data;
+        $("#txtNombre").val(clienteModelo.clienteActual.nombre);
+        $("#txtApellido").val(clienteModelo.clienteActual.apellido);
+        $("#txtIdentificacion").val(clienteModelo.clienteActual.identificacion).attr('disabled', 'disabled');
+        $("#txtTelefono").val(clienteModelo.clienteActual.telefono);
+        $("#txtDireccion").val(clienteModelo.clienteActual.direccion);
+        $("#txtUsuario").val(clienteModelo.clienteActual.usuario);
+        $("#txtUsuario").attr('disabled', 'disabled');
+        $("#txtContrasena").val(clienteModelo.clienteActual.contrasena);
+        $("#txtContrasena").attr('disabled', 'disabled');
+        $("#txtFechaNacimiento").val(clienteModelo.clienteActual.fechaNacimiento);
+        $("#txtCorreo").val(clienteModelo.clienteActual.correo);
+        $("#txtCorreo").attr('disabled', 'disabled');
+        _dom.asignarValorSelect('#cboTipoCliente', clienteModelo.clienteActual.tipoCliente.idTipoCliente);
+        _dom.asignarValorSelect('#cboTipoDocumento', clienteModelo.clienteActual.tipoDocumento.idTipoDocumento);
+        clienteModelo.clienteActual.estado ? $('#cbxEstado').prop('checked', true) : $('#cbxEstado').prop('checked', false);
+        $('#formCliente').find('label').addClass('active');
+    },
+    callbackEliminarCliente: function (data) {
+        _dom.mostrarDialogo(data.mensaje);
+        thatCliente.cargarClientes();
     }
-    
+
 };
 clienteVista.init();

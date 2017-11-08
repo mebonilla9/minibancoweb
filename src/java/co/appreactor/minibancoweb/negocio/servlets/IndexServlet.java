@@ -104,11 +104,7 @@ public class IndexServlet extends HttpServlet {
     }// </editor-fold>
 
     private void iniciarSesion(HttpServletRequest request, HttpServletResponse response) throws MiniBancoException, ServletException, IOException {
-        HttpSession sesion = request.getSession();
-        if (sesion.getAttribute("usuario") != null) {
-            response.sendRedirect(request.getContextPath() + ERutas.Home.CARGAR);
-            return;
-        }
+
         String usuario = request.getParameter("usuario");
         String contrasena = request.getParameter("contrasena");
 
@@ -117,6 +113,9 @@ public class IndexServlet extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
             return;
         }
+
+        HttpSession sesion = request.getSession();
+
         Connection cnn = Conexion.conectar();
         Cliente clienteAutorizado = new ClienteDelegado(cnn).consultaLogin(usuario, CryptoUtil.cifrarContrasena(contrasena, "384"));
 
@@ -125,9 +124,12 @@ public class IndexServlet extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
             return;
         }
+
         sesion.setAttribute("usuario", clienteAutorizado);
-        response.sendRedirect(request.getContextPath() + ERutas.Home.CARGAR);
-        //request.getRequestDispatcher(ERutas.Home.CARGAR).forward(request, response);
+
+        if (sesion.getAttribute("usuario") != null) {
+            response.sendRedirect(request.getContextPath() + ERutas.Home.CARGAR);
+        }
     }
 
 }

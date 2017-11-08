@@ -20,5 +20,11 @@ var _dom = {
         value = cbo.val();
         cbo.material_select();
         return value;
+    },
+    asignarValorSelect:function(selector,value){
+        var cbo = $(selector);
+        cbo.material_select('destroy');
+        cbo.val(value);
+        cbo.material_select();
     }
 };

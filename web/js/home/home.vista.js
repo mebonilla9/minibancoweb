@@ -9,7 +9,7 @@ var indexVista = {
         homeThat = this;
         console.log('Home Cargado');
         $(".button-collapse").sideNav();
-        $('.contenedor-principal').load('vistas/registrar.jsp');
+        $('.contenedor-principal').load('vistas/cliente.jsp');
     }
 };
 indexVista.init();

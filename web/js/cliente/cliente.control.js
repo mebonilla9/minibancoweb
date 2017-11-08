@@ -30,5 +30,12 @@ var clienteControl = {
             'data': data,
             'completado': callback
         });
+    },
+    modificarCliente:function(data,callback){
+        return _app.ajax({
+            'url': 'http://localhost:8084/minibancoweb/cliente/modificar',
+            'data': data,
+            'completado': callback
+        });
     }
 };
