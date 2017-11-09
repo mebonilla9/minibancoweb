@@ -95,13 +95,24 @@ var clienteVista = {
         clienteModelo.clienteActual.telefono = $('#txtTelefono').val();
         clienteModelo.clienteActual.direccion = $('#txtDireccion').val();
         clienteModelo.clienteActual.usuario = $('#txtUsuario').val();
-        clienteModelo.clienteActual.contrasena = CryptoJS.SHA256($('#txtContrasena').val()).toString();
+        
+        clienteModelo.clienteActual.contrasena = 
+                (clienteModelo.status!=='upd')
+                ?CryptoJS.SHA256($('#txtContrasena').val()).toString()
+                :clienteModelo.clienteActual.contrasena;
+                
         clienteModelo.clienteActual.fechaNacimiento = $('#txtFechaNacimiento').val();
         clienteModelo.clienteActual.correo = $('#txtCorreo').val();
         clienteModelo.clienteActual.tipoCliente.idTipoCliente = _dom.obtenerValorSelect('#cboTipoCliente');
         clienteModelo.clienteActual.tipoDocumento.idTipoDocumento = _dom.obtenerValorSelect('#cboTipoDocumento');
         clienteModelo.clienteActual.estado = $('#cbxEstado').prop('checked');
         console.log(clienteModelo.clienteActual);
+        // evaluar el status del clienteModelo para determinar si se hace una insersion o
+        // modificacion
+        if (clienteModelo.status === 'upd') {
+            clienteControl.modificarCliente(JSON.stringify(clienteModelo.clienteActual),thatCliente.callbackModificarCliente);
+            return;
+        }
         clienteControl.registrarCliente(JSON.stringify(clienteModelo.clienteActual), thatCliente.callbackRegistrarCliente);
     },
     callbackRegistrarCliente: function (data) {
@@ -110,6 +121,14 @@ var clienteVista = {
         $('#formCliente').trigger('reset');
         $('#cboTipoCliente').prop('selectedIndex', 0);
         $('#cboTipoDocumento').prop('selectedIndex', 0);
+    },
+    callbackModificarCliente:function(data){
+        _dom.mostrarDialogo(data.mensaje);
+        thatCliente.cargarClientes();
+        $('#formCliente').trigger('reset');
+        $('#cboTipoCliente').prop('selectedIndex', 0);
+        $('#cboTipoDocumento').prop('selectedIndex', 0);
+        clienteModelo.status = '';
     },
     eliminarCliente: function () {
         var id = $(this).attr('data-id');
