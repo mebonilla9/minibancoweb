@@ -6,8 +6,11 @@
 package co.appreactor.minibancoweb.negocio.servlets;
 
 import co.appreactor.minibancoweb.negocio.constantes.ERutas;
+import co.edu.intecap.minibancolibreria.modelo.dto.MenuDto;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,6 +40,7 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            
             request.getRequestDispatcher("/home.jsp").forward(request, response);
         }
     }
@@ -79,5 +83,11 @@ public class HomeServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
+    
+    
+    private List<MenuDto> generarArbolMenu(){
+        List<MenuDto> arbol = new ArrayList<>();
+        
+        return arbol;
+    }
 }
