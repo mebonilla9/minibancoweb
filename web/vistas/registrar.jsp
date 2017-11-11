@@ -15,7 +15,7 @@
         </div>
     </nav>
     <div id="clienteForm">
-        <form id="formCliente">
+        <form id="formRegistrar">
             <div class="card-panel grey lighten-4">
                 <div class="row">
                     <div class="input-field col m6 s12">
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn green modal-action modal-close waves-effect waves-light">Agregar</button>
+                        <button id="btnAgregarTipoCliente" type="button" class="btn green modal-action modal-close waves-effect waves-light">Agregar</button>
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn green modal-action modal-close waves-effect waves-light">Agregar</button>
+                        <button id="btnAgregarTipoDocumento" type="button" class="btn green modal-action modal-close waves-effect waves-light">Agregar</button>
                     </div>
                 </div>
             </div>
@@ -134,6 +134,7 @@
         </form>
     </div>
 </div>
+<script type="text/javascript" src="js/registrar/registrar.modelo.js"></script>
 <script type="text/javascript" src="js/registrar/registrar.control.js"></script>
 <script type="text/javascript" src="js/registrar/registrar.vista.js"></script>
 </div>

@@ -54,6 +54,9 @@
             </div>
         </main>
         <script type="text/javascript" src="js/libs/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/libs/picker.js"></script>
+        <script type="text/javascript" src="js/libs/picker.date.js"></script>
+        <script type="text/javascript" src="js/libs/picker.time.js"></script>
         <script type="text/javascript" src="js/libs/materialize.min.js"></script>
         <script type="text/javascript" src="js/libs/sha256.js"></script>
         <script type="text/javascript" src="js/app/app.dom.js"></script>

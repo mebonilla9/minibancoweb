@@ -8,10 +8,21 @@ var clienteVista = {
         thatCliente.cargarTipoDocumento();
         thatCliente.cargarClientes();
         thatCliente.asignarEventos();
+
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year,
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            format: 'yyyy-mm-dd',
+            closeOnSelect: false // Close upon selecting a date,
+        });
     },
     asignarEventos: function () {
         // Asignacion del evento submit para fomulario de cliente
         $('#formCliente').on('submit', thatCliente.registrarCliente);
+        $('button[type="reset"]').on('click', thatCliente.resetSobreacargado);
     },
     // encargarse de disparar la peticion
     cargarTipoCliente: function () {
@@ -95,12 +106,12 @@ var clienteVista = {
         clienteModelo.clienteActual.telefono = $('#txtTelefono').val();
         clienteModelo.clienteActual.direccion = $('#txtDireccion').val();
         clienteModelo.clienteActual.usuario = $('#txtUsuario').val();
-        
-        clienteModelo.clienteActual.contrasena = 
-                (clienteModelo.status!=='upd')
-                ?CryptoJS.SHA256($('#txtContrasena').val()).toString()
-                :clienteModelo.clienteActual.contrasena;
-                
+
+        clienteModelo.clienteActual.contrasena =
+                (clienteModelo.status !== 'upd')
+                ? CryptoJS.SHA256($('#txtContrasena').val()).toString()
+                : clienteModelo.clienteActual.contrasena;
+
         clienteModelo.clienteActual.fechaNacimiento = $('#txtFechaNacimiento').val();
         clienteModelo.clienteActual.correo = $('#txtCorreo').val();
         clienteModelo.clienteActual.tipoCliente.idTipoCliente = _dom.obtenerValorSelect('#cboTipoCliente');
@@ -110,7 +121,7 @@ var clienteVista = {
         // evaluar el status del clienteModelo para determinar si se hace una insersion o
         // modificacion
         if (clienteModelo.status === 'upd') {
-            clienteControl.modificarCliente(JSON.stringify(clienteModelo.clienteActual),thatCliente.callbackModificarCliente);
+            clienteControl.modificarCliente(JSON.stringify(clienteModelo.clienteActual), thatCliente.callbackModificarCliente);
             return;
         }
         clienteControl.registrarCliente(JSON.stringify(clienteModelo.clienteActual), thatCliente.callbackRegistrarCliente);
@@ -122,7 +133,7 @@ var clienteVista = {
         $('#cboTipoCliente').prop('selectedIndex', 0);
         $('#cboTipoDocumento').prop('selectedIndex', 0);
     },
-    callbackModificarCliente:function(data){
+    callbackModificarCliente: function (data) {
         _dom.mostrarDialogo(data.mensaje);
         thatCliente.cargarClientes();
         $('#formCliente').trigger('reset');
@@ -180,6 +191,11 @@ var clienteVista = {
     callbackEliminarCliente: function (data) {
         _dom.mostrarDialogo(data.mensaje);
         thatCliente.cargarClientes();
+    },
+    resetSobreacargado: function (e) {
+        _dom.asignarValorSelect('#cboTipoCliente', -1);
+        _dom.asignarValorSelect('#cboTipoDocumento', -1);
+        $('#formCliente').find('label').removeClass('active');
     }
 
 };

@@ -49,6 +49,7 @@ public final class ERutas {
         public static final String MODIFICAR = "/cliente/modificar";
         public static final String CONSULTAR = "/cliente/consultar";
         public static final String BUSCAR = "/cliente/buscar";
+        public static final String REGISTRAR = "/cliente/registrar";
         
     }
 

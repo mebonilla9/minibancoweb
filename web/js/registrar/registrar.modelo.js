@@ -10,12 +10,12 @@ var registrarModelo = {
         fechaNacimiento: '',
         correo: '',
         tipoCliente: {
-            idTipoCliente: '',
+            idTipoCliente: null,
             nombre: '',
             estado: true
         },
         tipoDocumento: {
-            idTipoDocumento: '',
+            idTipoDocumento: null,
             nombre: '',
             estado: true
         },

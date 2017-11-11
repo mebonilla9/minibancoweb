@@ -36,7 +36,8 @@ import javax.servlet.http.HttpServletResponse;
             ERutas.Cliente.INSERTAR,
             ERutas.Cliente.MODIFICAR,
             ERutas.Cliente.CONSULTAR,
-            ERutas.Cliente.BUSCAR
+            ERutas.Cliente.BUSCAR,
+            ERutas.Cliente.REGISTRAR
         })
 public class ClienteServlet extends HttpServlet {
 
@@ -99,6 +100,12 @@ public class ClienteServlet extends HttpServlet {
                         } else {
                             respuesta = new RespuestaDto(EMensajes.NO_RESULTADOS);
                         }
+                        break;
+                    case ERutas.Cliente.REGISTRAR:
+                        Cliente clienteRegistrar = obtenerCliente(request);
+                        clienteDelegado.registrarClienteTransaccion(clienteRegistrar);
+                        respuesta = new RespuestaDto(EMensajes.INSERTO);
+                        Conexion.commit(cnn);
                         break;
                 }
             } catch (MiniBancoException e) {
